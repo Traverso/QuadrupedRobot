@@ -29,21 +29,31 @@ void setup() {
   legSetup();
   homePosition();
 
-  calibrate();
-  return;
+  //calibrate();
+  //return;
   
  
-  //communicationSetup();
+  communicationSetup();
   controllerSetup();
 
   
   loadWalk(CURRENT_WALK,CURRENT_STEP_COUNT,MOVING_FORWARD,0);
+
+
 }
 
 
 void loop() {
-  //communicationLoop();
-  controllerLoop();
+
+  if(runController())
+  {
+      controllerLoop();
+  }
+  else
+  {
+    communicationLoop();
+  }
+
 }
 
 

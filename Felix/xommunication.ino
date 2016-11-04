@@ -82,59 +82,6 @@ void bluetoothSetup()
   Serial.println(F("******************************"));
 
 }
-bool getUserInput(char buffer[], uint8_t maxSize)
-{
-  // timeout in 100 milliseconds
-  TimeoutTimer timeout(100);
-
-  memset(buffer, 0, maxSize);
-  while( (!Serial.available()) && !timeout.expired() ) { delay(1); }
-
-  if ( timeout.expired() ) return false;
-
-  delay(2);
-  uint8_t count=0;
-  do
-  {
-    count += Serial.readBytes(buffer+count, maxSize);
-    delay(2);
-  } while( (count < maxSize) && (Serial.available()) );
-
-  return true;
-}
-
-void readCommands()
-{
-   // Check for user input
-  char inputs[BUFSIZE+1];
-
-  if ( getUserInput(inputs, BUFSIZE) )
-  {
-    // Send characters to Bluefruit
-    Serial.print("[Send] ");
-    Serial.println(inputs);
-
-    ble.print("AT+BLEUARTTX=");
-    ble.println(inputs);
-
-    // check response stastus
-    if (! ble.waitForOK() ) {
-      Serial.println(F("Failed to send?"));
-    }
-  }
-
-  // Check for incoming characters from Bluefruit
-  ble.println("AT+BLEUARTRX");
-  ble.readline();
-  if (strcmp(ble.buffer, "OK") == 0) {
-    // no data
-    return;
-  }
-  // Some data was found, its in the buffer
-  Serial.print(F("[Recv] ")); Serial.println(ble.buffer);
-  walkthetalk(ble.buffer);
-  ble.waitForOK();
-}
 
 void readData()
 {
@@ -162,7 +109,6 @@ void readData()
 
 void communicationLoop()
 {
-  //readCommands();
   readData();
 }
 
@@ -181,21 +127,6 @@ String getValue(String data, char separator, int index)
   return found>index ? data.substring(strIndex[0], strIndex[1]) : "";
 }
 
-void walkthetalk(String cmd)
-{
-  String xval = getValue(cmd, ':', 0);
-  String yval = getValue(cmd, ':', 1);
-
-  Serial.println("Y:" + yval);
-  Serial.print("X:" + xval);
-
-  int xvalue = xval.toInt(); //stringToNumber(xval);
-  int yvalue = yval.toInt(); //stringToNumber(yval);
-
-  struct point o = { xvalue, yvalue };
-  testIK(o);
-
-}
 
 /**************************************************************************/
 /*!

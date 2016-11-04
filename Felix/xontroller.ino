@@ -4,14 +4,17 @@ void controllerSetup()
   LAST_TIMER = millis();
 }
 
+bool runController()
+{
+   //run only every n seconds
+  if((millis() - LAST_TIMER) < FRAME_INTERVAL) return false;
+  if(MOVING < 0) return false;
+  LAST_TIMER = millis();
+  return true;
+}
+
 void controllerLoop()
 {
-  //run only every n seconds
-  if((millis() - LAST_TIMER) < FRAME_INTERVAL) return;
-  LAST_TIMER = millis();
-
-  if(MOVING < 0) return;
-
   if(KEYFRAME_LENGTH < 1) return; //no keyframes
   if(LOAD_NEXT_KEYFRAME) loadNextKeyFrame();
 

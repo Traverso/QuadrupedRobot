@@ -1,9 +1,6 @@
 #Felix - a 3D Printable Quadruped Robot
-==========================================
+-----------------------------------------
 <img src="https://github.com/Traverso/QuadrupedRobot/blob/master/felix_and_daisy.JPG?raw=true">
-
-
-==========================================
 
 Simple 3D printable quadruped robot,
 driven by 8 servos and a microcontroller.
